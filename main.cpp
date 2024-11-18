@@ -5,20 +5,19 @@
 int main()
 {
 	screen = tigrWindow(640, 480, "Math 101", 0);
-	float t = 0;
 
+	aabb red_box = aabb(world_to_screen(v2(-50, -50)), world_to_screen(v2(50, 50)));
+	aabb blue_box = aabb(world_to_screen(v2(-50, -50)), world_to_screen(v2(50, 50)));
 	while (!tigrClosed(screen) && !tigrKeyDown(screen, TK_ESCAPE)) {
 		float dt = tigrTime();
-		t += dt;
 		tigrClear(screen, color_black());
 
-		aabb box = aabb(v2(120, 120), v2(540, 360));
-		
-		v2 offset = v2(cosf(t), sinf(t)) * 100.0f;
-		box.min = box.min - offset;
-		box.max = box.max + offset;
-
-		draw_box(box, color_white());
+		red_box.min += v2(30.0f, 0) * dt;
+		red_box.max += v2(30.0f, 0) * dt;
+		blue_box.min += v2(0, 30.0f) * dt;
+		blue_box.max += v2(0, 30.0f) * dt;
+		draw_box(red_box, color_red());
+		draw_box(blue_box, color_blue());
 
 		tigrUpdate(screen);
 	}
