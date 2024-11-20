@@ -11,8 +11,6 @@ struct v2
 	}
 };
 
-v2 norm(v2 v) { float l = len(v); return v * (1.0f / l); }
-
 v2 operator+(v2 a, v2 b) { return v2(a.x + b.x, a.y + b.y); }
 v2 operator+=(v2& a, v2 b) { a = v2(a.x + b.x, a.y + b.y); return a; }
 v2 operator-(v2 a, v2 b) { return v2(a.x - b.x, a.y - b.y); }
@@ -26,6 +24,8 @@ float dot(v2 a, v2 b) { return a.x * b.x + a.y * b.y; };
 float len(v2 v) { return sqrtf(dot(v, v)); }
 float len_squared(v2 v) { return dot(v, v); }
 float sign(float x) { return x > 0 ? 1.0f : -1.0f; }
+
+v2 norm(v2 v) { float l = len(v); return v * (1.0f / l); }
 
 struct aabb
 {
@@ -80,3 +80,19 @@ v2 rotate_point_a_around_point_b(v2 a, v2 b, float radians)
 float atan2_360(float y, float x) { return atan2f(-y, x) + 3.14159265f; };
 float atan2_360(rotation r) { return atan2_360(r.s, r.c); };
 float atan2_360(v2 v) { return atan2f(-v.y, -v.x) + 3.14159265f;};
+
+float det2(v2 a, v2 b) { return a.x * b.y - a.y * b.x; }
+
+float shortest_arc(v2 a, v2 b)
+{
+	a = norm(a);
+	b = norm(b);
+	float c = dot(a, b);
+	float s = det2(a, b);
+	float theta = acosf(c);
+	if (s > 0) {
+		return theta;
+	} else {
+		return -theta;
+	}
+}
