@@ -15,11 +15,14 @@ v2 world_to_screen(v2 p)
 
 void draw_point(v2 p, TPixel color)
 {
+	p = world_to_screen(p);
 	tigrPlot(screen, (int)p.x, (int)p.y, color);
 }
 
 void draw_line(v2 a, v2 b, TPixel color)
 {
+	a = world_to_screen(a);
+	b = world_to_screen(b);
 	tigrLine(screen, (int)a.x, (int)a.y, (int)b.x, (int)b.y, color);
 }
 
