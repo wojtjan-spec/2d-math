@@ -19,7 +19,13 @@ v2 operator*(v2 a, float b) {return v2(a.x * b, a.y * b);}
 v2 operator*=(v2& a, float b) { a = v2(a.x * b, a.y * b); return a; }
 v2 operator/(v2 a, float b) { return v2(a.x / b, a.y / b); }
 v2 operator/=(v2& a, float b) { a = v2(a.x / b, a.y / b); return a; }
-float len(v2 v) { return sqrtf(v.x * v.x + v.y * v.y); }
+
+float dot(v2 a, v2 b) { return a.x * b.x + a.y * b.y; };
+float len(v2 v) { return sqrtf(dot(v, v)); }
+float len_squared(v2 v) { return dot(v, v); }
+float sign(float x) { return x > 0 ? 1.0f : -1.0f; }
+
+v2 norm(v2 v) { float l = len(v); return v * (1.0f / l); }
 
 struct aabb
 {
@@ -29,18 +35,21 @@ struct aabb
 	v2 max;
 };
 
-float width(aabb box) {return box.max.x - box.min.x; };
-float height(aabb box) {return box.max.y - box.min.y; };
-v2 center(aabb box) {return (box.min + box.max) * 0.5f; };
+float width(aabb box) { return box.max.x - box.min.x; };
+float height(aabb box) { return box.max.y - box.min.y; };
+v2 center(aabb box) { return (box.min + box.max) * 0.5f; };
 
 struct rotation 
 {
+	rotation() { }
+	rotation(float angle) { s = sinf(angle); c = sinf(angle); }
+	rotation(float s, float c) { this->s = s; this->c = c; }
 	float s;
 	float c;
 };
 
 rotation sincos(float a) { rotation r; r.c = cosf(a); r.s = sinf(a); return r; };
-v2 mul(rotation a, v2 b) {return v2(a.c * b.x - a.s * b.y, a.s * b.x + a.c * b.y); }; 
+v2 mul(rotation a, v2 b) { return v2(a.c * b.x - a.s * b.y, a.s * b.x + a.c * b.y); }; 
 
 v2 rotate(v2 v, float radians)
 {
@@ -66,4 +75,24 @@ v2 rotate_point_a_around_point_b(v2 a, v2 b, float radians)
 	a = v2(c * a.x - s * a.y, s * a.x + c * a.y);
 
 	return a + b;
+}
+
+float atan2_360(float y, float x) { return atan2f(-y, x) + 3.14159265f; };
+float atan2_360(rotation r) { return atan2_360(r.s, r.c); };
+float atan2_360(v2 v) { return atan2f(-v.y, -v.x) + 3.14159265f;};
+
+float det2(v2 a, v2 b) { return a.x * b.y - a.y * b.x; }
+
+float shortest_arc(v2 a, v2 b)
+{
+	a = norm(a);
+	b = norm(b);
+	float c = dot(a, b);
+	float s = det2(a, b);
+	float theta = acosf(c);
+	if (s > 0) {
+		return theta;
+	} else {
+		return -theta;
+	}
 }
