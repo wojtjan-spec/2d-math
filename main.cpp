@@ -6,23 +6,23 @@ int main()
 {
 	screen = tigrWindow(640, 480, "Math 101", 0);
 
-	aabb red_box = aabb(world_to_screen(v2(-50, -50)), world_to_screen(v2(50, 50)));
-	aabb blue_box = aabb(world_to_screen(v2(-50, -50)), world_to_screen(v2(50, 50)));
+	float t = 0;
 	while (!tigrClosed(screen) && !tigrKeyDown(screen, TK_ESCAPE)) {
 		float dt = tigrTime();
+		t += dt;
 		tigrClear(screen, color_black());
 
-		red_box.min += v2(30.0f, 0) * dt;
-		red_box.max += v2(30.0f, 0) * dt;
-		blue_box.min += v2(0, 30.0f) * dt;
-		blue_box.max += v2(0, 30.0f) * dt;
-		draw_box(red_box, color_red());
-		draw_box(blue_box, color_blue());
+		v2 p = v2(100.0f, 0);
+		rotation r = sincos(t * 0.01f);
+		for (int i = 0; i < 32; ++i) {
+			draw_line(v2(0, 0), p, color_white());
+			p = mul(r, p);
+		}
 
 		tigrUpdate(screen);
 	}
 
-	tigrFree(screen);
+	tigrFree(screen);;
 
 	return 0;
 }
