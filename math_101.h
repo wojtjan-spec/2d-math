@@ -21,7 +21,11 @@ v2 operator*(v2 a, float b) {return v2(a.x * b, a.y * b);}
 v2 operator*=(v2& a, float b) { a = v2(a.x * b, a.y * b); return a; }
 v2 operator/(v2 a, float b) { return v2(a.x / b, a.y / b); }
 v2 operator/=(v2& a, float b) { a = v2(a.x / b, a.y / b); return a; }
-float len(v2 v) { return sqrtf(v.x * v.x + v.y * v.y); }
+
+float dot(v2 a, v2 b) { return a.x * b.x + a.y * b.y; };
+float len(v2 v) { return sqrtf(dot(v, v)); }
+float len_squared(v2 v) { return dot(v, v); }
+float sign(float x) { return x > 0 ? 1.0f : -1.0f; }
 
 struct aabb
 {
