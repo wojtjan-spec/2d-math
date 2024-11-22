@@ -114,3 +114,18 @@ v2 intersect(halfspace h, v2 q, v2 p)
 	float dp = distance(h, p);
 	return q + (p - q) * (dq / (dq - dp));
 }
+
+float lerp(float a, float b, float t) { return a + (b - a) * t; }
+v2 lerp(v2 a, v2 b, float t) { return a + (b - a) * t; }
+v2 bezier(v2 a, v2 b, v2 c, float t)
+{
+	v2 d = lerp(a, b, t);
+	v2 e = lerp(b, c, t);
+	return lerp(d, e, t);
+}
+v2 bezier(v2 a, v2 b, v2 c, v2 d, float t)
+{
+	v2 e = bezier(a, b, c, t);
+	v2 f = bezier(b, c, d, t);
+	return lerp(e, f, t);
+}
