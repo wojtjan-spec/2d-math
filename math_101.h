@@ -96,3 +96,21 @@ float shortest_arc(v2 a, v2 b)
 		return -theta;
 	}
 }
+
+struct halfspace
+{
+	halfspace() { }
+	halfspace(v2 n, v2 p) { this->n = n; c = dot(n, p); }
+	halfspace(v2 n, float c) { this->n = n; this->c = c; }
+	v2 n;
+	float c;
+};
+
+float distance(halfspace h, v2 p) { return dot(h.n, p) - h.c; }
+v2 project(halfspace h, v2 p) { return p - h.n * distance(h, p); }
+v2 intersect(halfspace h, v2 q, v2 p)
+{
+	float dq = distance(h, q);
+	float dp = distance(h, p);
+	return q + (p - q) * (dq / (dq - dp));
+}
