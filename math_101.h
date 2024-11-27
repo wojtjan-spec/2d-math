@@ -137,3 +137,52 @@ v2 bezier(v2 a, v2 b, v2 c, v2 d, float t)
 	v2 dttt = d * tt * t;
 	return auuu + buut3 + cutt3 + dttt;
 }
+
+struct m2
+{
+	v2 x;
+	v2 y;
+};
+
+m2 m2_rotation(float angle)
+{
+	float c = cosf(angle);
+	float s = sinf(angle);
+	m2 m;
+	m.x = v2(c, -s);
+	m.y = v2(s, c);
+	return m;
+}
+
+v2 mul(m2 m, v2 v) { return v2(m.x.x * v.x + m.y.x * v.y, m.x.y * v.x + m.y.y * v.y); }
+m2 mul(m2 a, m2 b) { m2 c; c.x = mul(a, b.x); c.y = mul(a, b.y); return c; }
+
+m2 m2_identity()
+{
+	m2 m;
+	m.x = v2(1, 0);
+	m.y = v2(0, 1);
+	return m;
+}
+
+m2 m2_scale(float x_scale, float y_scale)
+{
+	m2 m = m2_identity();
+	m.x *= x_scale;
+	m.y *= y_scale;
+	return m;
+}
+
+struct m3x2
+{
+	m2 m;
+	v2 p;
+};
+
+m3x2 make_translation(v2 p)
+{
+	m3x2 m;
+	m.m = m2_identity();
+	m.p = p;
+	return m;
+};
