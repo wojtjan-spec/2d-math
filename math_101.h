@@ -172,3 +172,17 @@ m2 m2_scale(float x_scale, float y_scale)
 	m.y *= y_scale;
 	return m;
 }
+
+struct m3x2
+{
+	m2 m;
+	v2 p;
+};
+
+m3x2 make_translation(v2 p)
+{
+	m3x2 m;
+	m.m = m2_identity();
+	m.p = p;
+	return m;
+};
