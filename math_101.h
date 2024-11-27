@@ -156,3 +156,19 @@ m2 m2_rotation(float angle)
 
 v2 mul(m2 m, v2 v) { return v2(m.x.x * v.x + m.y.x * v.y, m.x.y * v.x + m.y.y * v.y); }
 m2 mul(m2 a, m2 b) { m2 c; c.x = mul(a, b.x); c.y = mul(a, b.y); return c; }
+
+m2 m2_identity()
+{
+	m2 m;
+	m.x = v2(1, 0);
+	m.y = v2(0, 1);
+	return m;
+}
+
+m2 m2_scale(float x_scale, float y_scale)
+{
+	m2 m = m2_identity();
+	m.x *= x_scale;
+	m.y *= y_scale;
+	return m;
+}
