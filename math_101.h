@@ -1,3 +1,5 @@
+#include <array>
+
 struct v2 
 {
 	float x;
@@ -197,3 +199,8 @@ m3x2 make_TSR(v2 p, v2 s, float radians)
 	m.p = p;
 	return m;
 }
+
+struct mesh
+{
+	std::vector<v2> vertices = {};
+};
