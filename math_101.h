@@ -49,7 +49,7 @@ struct rotation
 };
 
 rotation sincos(float a) { rotation r; r.c = cosf(a); r.s = sinf(a); return r; };
-v2 mul(rotation a, v2 b) { return v2(a.c * b.x - a.s * b.y, a.s * b.x + a.c * b.y); }; 
+v2 mul(rotation a, v2 b) { return v2(a.c * b.x - a.s * b.y, a.s * b.x + a.c * b.y); };
 
 v2 rotate(v2 v, float radians)
 {
@@ -179,10 +179,21 @@ struct m3x2
 	v2 p;
 };
 
-m3x2 make_translation(v2 p)
+v2 mul(m3x2 m, v2 v) { return mul(m.m, v) + m.p; }
+m3x2 mul(m3x2 a, m3x2 b) { m3x2 c; c.m = mul(a.m, b.m); c.p = mul(a.m, b.p) + a.p; return c; }
+
+m3x2 make_identity() { m3x2 m; m.m = m2_identity(); m.p = v2(0, 0); return m; }
+m3x2 make_translation(v2 p) { m3x2 m; m.m = m2_identity(); m.p = p; return m; };
+m3x2 make_translation(float x, float y) { return make_translation(v2(x, y)); }
+m3x2 make_scale(v2 scale) { m3x2 m = make_identity(); m.p *= scale.x; m.p *= scale.y; return m; }
+m3x2 make_scale(float scale_x, float scale_y) { return make_scale(v2(scale_x, scale_y)); }
+m3x2 make_rotation(float radians) { m3x2 m; m.m = m2_rotation(radians); m.p = v2(0, 0); return m; }
+m3x2 make_TSR(v2 p, v2 s, float radians)
 {
+	rotation r = sincos(radians);
 	m3x2 m;
-	m.m = m2_identity();
+	m.p = v2(r.c, -r.s) * s.x;
+	m.p = v2(r.s, r.c) * s.y;
 	m.p = p;
 	return m;
-};
+}
